@@ -20,15 +20,19 @@ elif [ $1 = "arn-tags" ]; then
   echo -e "\nGathering only the Arn's for Local Policies..."
   aws iam list-policies --scope Local --query "Policies[].Arn" --output text > $2  
   echo -e "Done.\nGathering the Tags per policy..."
+  i = 1
   for policy in $(cat $2)
   do
-    echo -e "\033[2K ARN: ${policy}..."
+    # The CSI (control sequence introducer) at the end of the echo below ('\033[0K'), is used to
+    # erases the text from the cursor to the end of the line; '\r' – carriage return.
+    echo -ne " Policy #$i: ${policy}...\033[0K\r"
     aws iam get-policy --policy-arn ${policy} --query "Policy.[AttachmentCount,Arn,Tags]" --output text >> $2_tags.txt
+    ((i++))
   done
-  echo -e "Done."
+  echo -ne "Done. Total of $i policies were read.\033[0K\r"
 else
   echo -e "\nWrong 'info_type'!\nOptions: 'all' - everything, 'arn' - only arn'."
   exit 1
 fi
-echo -e "\nTask is complete. The requested list is inside: $2."
 
+echo -e "\nTask is complete. The requested list is inside: $2."
