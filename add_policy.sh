@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script is used for TESTING PURPOSES only!!!
+# Purpose: to add a temp policy
+
 # Check correct usage of the script
 if [ $# -ne 1 ]; then
   echo -e "\nWrong usage! Script must have 1 argument. (you provided $#)"
